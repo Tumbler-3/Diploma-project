@@ -18,13 +18,6 @@ classes = { 0: "Normal",
             6: "Pathological Myopia",
             7: "Other diseases/abnormalities"
           }
-
-data = np.sum(targets, axis=0)
-
-classes_names = list(classes.values())
-values = list(data)
-  
-fig = plt.figure(figsize = (10, 5))
  
 df["class_name"] = np.argmax(targets, axis=1).tolist()
 df["class_name"] = df["class_name"] .replace(classes)
