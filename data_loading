@@ -1,0 +1,35 @@
+import ast,cv2
+import numpy as np
+import pandas as pd  
+import tensorflow as tf
+
+
+df=pd.read_csv(r"df_proc.csv", encoding="utf-8")
+df["target"] = df["target"].apply(ast.literal_eval)
+
+
+def load_image(filename, target):
+    img = cv2.imread(f"Training Images/{filename.decode('utf-8')}", cv2.IMREAD_COLOR)
+    print(img)
+    img = img / 255.0  
+    return img, np.array(target, dtype=np.float32)
+
+image_paths = df["filename"].values
+image_paths_tensor = tf.constant(image_paths, dtype=tf.string)
+
+targets = np.array(df["target"].tolist())
+targets_tensor = tf.constant(targets, dtype=tf.int32)
+
+
+training_dataset = tf.data.Dataset.from_tensor_slices((image_paths_tensor, targets_tensor))
+
+print(training_dataset)
+for i, j in training_dataset.take(1):  # Take 1 batch
+    print(f"Training Images/{i.numpy()}")  # Print image data (numpy array)
+    print("Labels:", j.numpy())
+    
+def load_data(x, y):
+    return tf.numpy_function(load_image, [x, y], [tf.float32, tf.float32])
+
+training_dataset = training_dataset.map(load_data)
+training_dataset = training_dataset.batch(32).shuffle(1400)

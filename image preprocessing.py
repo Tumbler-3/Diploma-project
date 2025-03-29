@@ -25,7 +25,7 @@ def processing(image, output):
     
     processed_image = cv2.cvtColor(processed_lab, cv2.COLOR_LAB2BGR)
 
-    resized_image = cv2.resize(processed_image, (512, 512))
+    resized_image = cv2.resize(processed_image, (128, 128))
     
     cv2.imwrite(output, resized_image)
     
