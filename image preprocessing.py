@@ -1,17 +1,17 @@
 import cv2, os
 from glob import glob
 
-
-input_folder = "Training Images"
-output_folder = "Training Images 2"
+img_size = 128
+input_folder = "Testing Images orig"
+output_folder = "Testing Images"
 os.makedirs(output_folder, exist_ok=True)
 
-def processing(image, output):
+def processing(image, output, size):
     image = cv2.imread(image, cv2.IMREAD_COLOR)
     
     crop_x = (image.shape[1]) // 2
     crop_y = (image.shape[0]) // 2
-    crop_x = crop_x - crop_y
+    crop_x = crop_y - crop_x
     
     cropped_image = image[0:0+image.shape[0], crop_x:crop_x+image.shape[0]]
     
@@ -25,14 +25,14 @@ def processing(image, output):
     
     processed_image = cv2.cvtColor(processed_lab, cv2.COLOR_LAB2BGR)
 
-    resized_image = cv2.resize(processed_image, (128, 128))
+    resized_image = cv2.resize(processed_image, (size, size))
     
     cv2.imwrite(output, resized_image)
     
 
 image_paths = glob(os.path.join(input_folder, "*.jpg"))
-for image_path in image_paths:
-    filename = os.path.basename(image_path)
-    output_path = os.path.join(output_folder, filename)
-    processing(image_path, output_path)
+for i in image_paths:
+    file = os.path.basename(i)
+    output_path = os.path.join(output_folder, file)
+    processing(i, output_path, img_size)
     

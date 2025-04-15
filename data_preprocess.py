@@ -1,21 +1,14 @@
-import pandas as pd  
+import pandas as pd
 import numpy as np
 import json
 
-df=pd.read_csv(r"full_df.csv")
+df = pd.read_csv(r"full_df.csv")
 df = df.drop(columns=['N', 'D', 'G', 'C', 'A', 'H', 'M', 'O', 'labels'])
 targets = np.array(df["target"].apply(lambda x: json.loads(x)).tolist())
 
-classes = { 0: "Normal",
-            1: "Diabetes",
-            2: "Glaucoma",
-            3: "Cataract",
-            4: "Age related Macular Degeneration",
-            5: "Hypertension",
-            6: "Pathological Myopia",
-            7: "Other diseases/abnormalities"
-          }
- 
+classes = {0: "Normal", 1: "Diabetes", 2: "Glaucoma", 3: "Cataract", 4: "Age related Macular Degeneration",
+           5: "Hypertension", 6: "Pathological Myopia", 7: "Other diseases/abnormalities"}
+
 df["class_name"] = np.argmax(targets, axis=1).tolist()
 df["class_name"] = df["class_name"].replace(classes)
 
