@@ -2,8 +2,8 @@ import cv2, os
 from glob import glob
 
 img_size = 128
-input_folder = "Testing Images orig"
-output_folder = "Testing Images"
+input_folder = "Training Images orig"
+output_folder = "Training Images"
 os.makedirs(output_folder, exist_ok=True)
 
 def processing(image, output, size):
