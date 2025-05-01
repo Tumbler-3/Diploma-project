@@ -1,14 +1,14 @@
 import streamlit as st
-import tensorflow as tf
 import numpy as np
 import cv2
+from keras import models
 
 class_names = ["Normal", "Diabetes", "Glaucoma", "Cataract",
                "Age related Macular Degeneration", "Hypertension",
                "Pathological Myopia", "Other diseases/abnormalities"]
 
 try:
-    model = tf.keras.models.load_model("eye_disease_model.h5")
+    model = models.load_model("eye_disease_model.h5")
     st.success("Model loaded successfully.")
 except Exception as e:
     st.error(f"Error loading model: {e}")
