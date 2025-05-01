@@ -3,9 +3,8 @@ import numpy as np
 import cv2
 from keras import models
 
-class_names = ["Normal", "Diabetes", "Glaucoma", "Cataract",
-               "Age related Macular Degeneration", "Hypertension",
-               "Pathological Myopia", "Other diseases/abnormalities"]
+classes = {0: "Normal", 1: "Diabetes", 2: "Glaucoma", 3: "Cataract", 4: "Age related Macular Degeneration",
+           5: "Hypertension", 6: "Pathological Myopia", 7: "Other diseases/abnormalities"}
 
 try:
     model = models.load_model("eye_disease_model.h5")
@@ -36,7 +35,8 @@ if uploaded_file is not None and model is not None:
             print(f"Prediction shape: {prediction.shape}")
 
             prediction = prediction.squeeze()  
-            predicted_class = class_names[np.argmax(prediction)]
+            predicted_class_index = np.argmax(prediction) 
+            predicted_class = classes[predicted_class_index]  
             st.markdown(f"### Prediction: {predicted_class}")
         
         except Exception as e:
@@ -44,3 +44,4 @@ if uploaded_file is not None and model is not None:
 else:
     if model is None:
         st.error("The model could not be loaded. Please check the model file.")
+
