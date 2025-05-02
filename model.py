@@ -11,9 +11,10 @@ import seaborn as sns
 from sklearn.metrics import confusion_matrix
 
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
-from keras import models, layers, losses
+from keras import models, layers, losses, saving
 import tensorflow as tf
 
+rks = saving.register_keras_serializable
 
 df = pd.read_csv(r"df_proc.csv", encoding="utf-8")
 df["target"] = df["target"].apply(ast.literal_eval)
@@ -89,6 +90,7 @@ weights = compute_class_weight(class_weight="balanced", classes=np.unique(
 weights_tensor = tf.constant(weights, dtype=tf.float32)
 
 
+@rks()
 def weights_compile(y_true, y_pred):
     weights = tf.reduce_sum(weights_tensor * y_true, axis=1)
     loss = losses.categorical_crossentropy(y_true, y_pred)
@@ -101,71 +103,71 @@ model.compile(optimizer='adam', loss=weights_compile, metrics=['accuracy'])
 hist = model.fit(train_dataset, epochs=29, batch_size=32, validation_data=val_dataset)
 
 model.save("ODM.keras")
-metrics = hist.history
-print(metrics)
-history_df = pd.DataFrame(metrics)
-history_df.to_csv('training_metrics.csv', index=False)
+# metrics = hist.history
+# print(metrics)
+# history_df = pd.DataFrame(metrics)
+# history_df.to_csv('training_metrics.csv', index=False)
 
 
-plt.figure(figsize=(10, 6))
-plt.plot(metrics['loss'], label='Training Loss')
-plt.plot(metrics['val_loss'], label='Validation Loss')
-plt.title('Loss vs. Epochs')
-plt.xlabel('Epochs')
-plt.ylabel('Loss')
-plt.legend()
-plt.grid(True)
-plt.savefig('training_loss_vs_epochs.png')
-plt.close()
+# plt.figure(figsize=(10, 6))
+# plt.plot(metrics['loss'], label='Training Loss')
+# plt.plot(metrics['val_loss'], label='Validation Loss')
+# plt.title('Loss vs. Epochs')
+# plt.xlabel('Epochs')
+# plt.ylabel('Loss')
+# plt.legend()
+# plt.grid(True)
+# plt.savefig('training_loss_vs_epochs.png')
+# plt.close()
 
 
-plt.figure(figsize=(10, 6))
-plt.plot(metrics['accuracy'], label='Training Accuracy')
-plt.plot(metrics['val_accuracy'], label='Validation Accuracy')
-plt.title('Accuracy vs. Epochs')
-plt.xlabel('Epochs')
-plt.ylabel('Accuracy')
-plt.legend()
-plt.grid(True)
-plt.savefig('training_accuracy_vs_epochs.png')
-plt.close()
+# plt.figure(figsize=(10, 6))
+# plt.plot(metrics['accuracy'], label='Training Accuracy')
+# plt.plot(metrics['val_accuracy'], label='Validation Accuracy')
+# plt.title('Accuracy vs. Epochs')
+# plt.xlabel('Epochs')
+# plt.ylabel('Accuracy')
+# plt.legend()
+# plt.grid(True)
+# plt.savefig('training_accuracy_vs_epochs.png')
+# plt.close()
 
 
-y_true = []
-y_pred = []
-images = []
+# y_true = []
+# y_pred = []
+# images = []
 
-for img, label in val_dataset:
-    pred = model.predict(img)
+# for img, label in val_dataset:
+#     pred = model.predict(img)
 
-    y_true.extend(np.argmax(label.numpy(), axis=1))
-    y_pred.extend(np.argmax(pred, axis=1))
+#     y_true.extend(np.argmax(label.numpy(), axis=1))
+#     y_pred.extend(np.argmax(pred, axis=1))
 
-    images.extend(img.numpy())
+#     images.extend(img.numpy())
 
-y_true = np.array(y_true)
-y_pred = np.array(y_pred)
-
-
-matrix = confusion_matrix(y_true, y_pred)
-plt.figure(figsize=(8, 6))
-sns.heatmap(matrix, annot=True, fmt='d', cmap='Blues',
-            xticklabels=class_names, yticklabels=class_names)
-plt.xlabel('Prediction')
-plt.ylabel('Truth')
-plt.savefig('confusion_matrix.png')
-plt.close() 
+# y_true = np.array(y_true)
+# y_pred = np.array(y_pred)
 
 
-missed = np.where(y_true != y_pred)[0]
+# matrix = confusion_matrix(y_true, y_pred)
+# plt.figure(figsize=(8, 6))
+# sns.heatmap(matrix, annot=True, fmt='d', cmap='Blues',
+#             xticklabels=class_names, yticklabels=class_names)
+# plt.xlabel('Prediction')
+# plt.ylabel('Truth')
+# plt.savefig('confusion_matrix.png')
+# plt.close() 
 
-plt.figure(figsize=(12, 8))
-for i, idx in enumerate(missed[:6]):
-    plt.subplot(2, 3, i + 1)
-    plt.imshow(images[idx])
-    plt.title(f"True: {class_names[y_true[idx]]}\nPred: {class_names[y_pred[idx]]}")
-    plt.axis('off')
-plt.suptitle("Misses")
-plt.tight_layout()
-plt.savefig('misses.png') 
-plt.close()
+
+# missed = np.where(y_true != y_pred)[0]
+
+# plt.figure(figsize=(12, 8))
+# for i, idx in enumerate(missed[:6]):
+#     plt.subplot(2, 3, i + 1)
+#     plt.imshow(images[idx])
+#     plt.title(f"True: {class_names[y_true[idx]]}\nPred: {class_names[y_pred[idx]]}")
+#     plt.axis('off')
+# plt.suptitle("Misses")
+# plt.tight_layout()
+# plt.savefig('misses.png') 
+# plt.close()
