@@ -5,8 +5,8 @@ import os
 import urllib.request
 from keras import models
 
-MODEL_PATH = "streamlit/ODM.h5"
-MODEL_URL = "https://drive.google.com/uc?export=download&id=1vuH7NECxl7zDjkqjgWRnp8s0xY8XJ0CX"
+MODEL_PATH = "streamlit/ODM.keras"
+MODEL_URL = "https://drive.google.com/uc?export=download&id=1CRSOojRW3jqdKb9cJtJm-DQZnPej-Hwr"
 
 if not os.path.exists(MODEL_PATH):
     try:
