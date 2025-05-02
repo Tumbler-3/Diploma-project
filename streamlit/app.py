@@ -1,14 +1,38 @@
 import streamlit as st
 import numpy as np
 import cv2
+import os
+import urllib.request
 from keras import models
 
-classes = {0: "Normal", 1: "Diabetes", 2: "Glaucoma", 3: "Cataract", 4: "Age related Macular Degeneration",
-           5: "Hypertension", 6: "Pathological Myopia", 7: "Other diseases/abnormalities"}
+MODEL_PATH = "streamlit/ODM.h5"
+MODEL_URL = "https://raw.githubusercontent.com/Tumbler-3/Diploma-project/main/streamlit/ODM.h5"
 
+if not os.path.exists(MODEL_PATH):
+    try:
+        st.info("Downloading model file...")
+        urllib.request.urlretrieve(MODEL_URL, MODEL_PATH)
+        st.success("Model downloaded successfully.")
+    except Exception as e:
+        st.error(f"Error downloading the model: {e}")
 
-model = models.load_model(r"ODM.h5")
-st.success("Model loaded successfully.")
+try:
+    model = models.load_model(MODEL_PATH)
+    st.success("Model loaded successfully.")
+except Exception as e:
+    model = None
+    st.error(f"Failed to load model: {e}")
+
+classes = {
+    0: "Normal",
+    1: "Diabetes",
+    2: "Glaucoma",
+    3: "Cataract",
+    4: "Age related Macular Degeneration",
+    5: "Hypertension",
+    6: "Pathological Myopia",
+    7: "Other diseases/abnormalities"
+}
 
 st.title("Eye Disease Detection")
 uploaded_file = st.file_uploader("Upload an eye image", type=["jpg", "png", "jpeg"])
@@ -26,19 +50,14 @@ if uploaded_file is not None:
 
         st.image(image, caption="Uploaded Image", use_column_width=True)
 
-        try:
-            prediction = model.predict(image_input)
-            print(f"Prediction: {prediction}")
-            print(f"Prediction shape: {prediction.shape}")
-
-            prediction = prediction.squeeze()  
-            predicted_class_index = np.argmax(prediction) 
-            predicted_class = classes[predicted_class_index]  
-            st.markdown(f"### Prediction: {predicted_class}")
-        
-        except Exception as e:
-            st.error(f"Error during prediction: {e}")
-else:
-    if model is None:
-        st.error("The model could not be loaded. Please check the model file.")
-
+        if model:
+            try:
+                prediction = model.predict(image_input)
+                prediction = prediction.squeeze()  
+                predicted_class_index = np.argmax(prediction) 
+                predicted_class = classes[predicted_class_index]  
+                st.markdown(f"### Prediction: {predicted_class}")
+            except Exception as e:
+                st.error(f"Error during prediction: {e}")
+        else:
+            st.error("Model is not loaded. Cannot make predictions.")
