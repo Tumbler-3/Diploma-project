@@ -7,7 +7,7 @@ classes = {0: "Normal", 1: "Diabetes", 2: "Glaucoma", 3: "Cataract", 4: "Age rel
            5: "Hypertension", 6: "Pathological Myopia", 7: "Other diseases/abnormalities"}
 
 
-model = models.load_model(r"streamlit\\ODM.h5")
+model = models.load_model(r"ODM.h5")
 st.success("Model loaded successfully.")
 
 st.title("Eye Disease Detection")
