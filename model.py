@@ -100,7 +100,7 @@ model.compile(optimizer='adam', loss=weights_compile, metrics=['accuracy'])
 
 hist = model.fit(train_dataset, epochs=29, batch_size=32, validation_data=val_dataset)
 
-model.save("eye_disease_model.h5")
+model.save("ODM.h5")
 metrics = hist.history
 print(metrics)
 history_df = pd.DataFrame(metrics)
