@@ -6,7 +6,7 @@ import urllib.request
 from keras import models
 
 MODEL_PATH = "streamlit/ODM.h5"
-MODEL_URL = "https://raw.githubusercontent.com/Tumbler-3/Diploma-project/main/streamlit/ODM.h5"
+MODEL_URL = "https://drive.google.com/uc?export=download&id=1vuH7NECxl7zDjkqjgWRnp8s0xY8XJ0CX"
 
 if not os.path.exists(MODEL_PATH):
     try:
@@ -40,22 +40,22 @@ uploaded_file = st.file_uploader("Upload an eye image", type=["jpg", "png", "jpe
 if uploaded_file is not None:
     file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
     image = cv2.imdecode(file_bytes, 1)
-    
+
     if image is None:
         st.error("Error loading the image.")
     else:
-        image_resized = cv2.resize(image, (128, 128)) 
-        image_normalized = image_resized / 255.0  
-        image_input = np.expand_dims(image_normalized, axis=0)  
+        image_resized = cv2.resize(image, (128, 128))
+        image_normalized = image_resized / 255.0
+        image_input = np.expand_dims(image_normalized, axis=0)
 
         st.image(image, caption="Uploaded Image", use_column_width=True)
 
         if model:
             try:
                 prediction = model.predict(image_input)
-                prediction = prediction.squeeze()  
-                predicted_class_index = np.argmax(prediction) 
-                predicted_class = classes[predicted_class_index]  
+                prediction = prediction.squeeze()
+                predicted_class_index = np.argmax(prediction)
+                predicted_class = classes[predicted_class_index]
                 st.markdown(f"### Prediction: {predicted_class}")
             except Exception as e:
                 st.error(f"Error during prediction: {e}")
