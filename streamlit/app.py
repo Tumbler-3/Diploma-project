@@ -19,7 +19,7 @@ if not os.path.exists(MODEL_PATH):
         st.error(f"Error downloading the model: {e}")
 
 try:
-    model = models.load_model(MODEL_PATH, compile=False)
+    model = models.load_model(MODEL_PATH)
     print("Model loaded successfully.")
 except Exception as e:
     model = None
