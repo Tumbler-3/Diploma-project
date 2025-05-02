@@ -4,7 +4,7 @@ import cv2
 import os
 import urllib.request
 import tensorflow as tf
-from keras import models
+
 
 MODEL_PATH = "streamlit/ODM.keras"
 MODEL_URL = "https://drive.google.com/uc?export=download&id=1CRSOojRW3jqdKb9cJtJm-DQZnPej-Hwr"
@@ -19,7 +19,7 @@ if not os.path.exists(MODEL_PATH):
         st.error(f"Error downloading the model: {e}")
 
 try:
-    model = models.load_model(MODEL_PATH)
+    model = tf.keras.models.load_model(MODEL_PATH, compile=False)
     print("Model loaded successfully.")
 except Exception as e:
     model = None
