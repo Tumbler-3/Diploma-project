@@ -6,17 +6,14 @@ from keras import models
 classes = {0: "Normal", 1: "Diabetes", 2: "Glaucoma", 3: "Cataract", 4: "Age related Macular Degeneration",
            5: "Hypertension", 6: "Pathological Myopia", 7: "Other diseases/abnormalities"}
 
-try:
-    model = models.load_model("streamlit\ODM.h5")
-    st.success("Model loaded successfully.")
-except Exception as e:
-    st.error(f"Error loading model: {e}")
-    model = None  
+
+model = models.load_model(r"streamlit\\ODM.h5")
+st.success("Model loaded successfully.")
 
 st.title("Eye Disease Detection")
 uploaded_file = st.file_uploader("Upload an eye image", type=["jpg", "png", "jpeg"])
 
-if uploaded_file is not None and model is not None:
+if uploaded_file is not None:
     file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
     image = cv2.imdecode(file_bytes, 1)
     
