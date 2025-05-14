@@ -1,11 +1,12 @@
 import cv2
 
 def streamlit_processing(image, size):
-    crop_x = (image.shape[1]) // 2
-    crop_y = (image.shape[0]) // 2
-    crop_x = crop_y - crop_x
+    h, w = image.shape[:2]
+    min_dim = min(h, w)
+    crop_x = (w - min_dim) // 2
+    crop_y = (h - min_dim) // 2
 
-    cropped_image = image[0:image.shape[0], crop_x:crop_x+image.shape[0]]
+    cropped_image = image[crop_y:crop_y + min_dim, crop_x:crop_x + min_dim]
 
     lab = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2LAB)
     l, a, b = cv2.split(lab)
