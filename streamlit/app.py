@@ -56,9 +56,7 @@ if uploaded_file is not None:
         if model:
             try:
                 prediction = model.predict(image_input)
-                st.write(f"Prediction shape: {prediction.shape}")
                 prediction = prediction.squeeze()
-                st.write(f"Prediction after squeeze: {prediction}")
                 predicted_class_index = np.argmax(prediction)
                 predicted_class = classes.get(predicted_class_index, "Unknown")
                 st.markdown(f"### Prediction: {predicted_class}")
