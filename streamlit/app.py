@@ -51,7 +51,7 @@ if uploaded_file is not None:
         image_normalized = processed_image / 255.0
         image_input = np.expand_dims(image_normalized, axis=0)
 
-        st.image(image, caption="Uploaded Image", use_column_width=True)
+        st.image(image, caption="Uploaded Image", use_container_width=True)
 
         if model:
             try:
