@@ -4,7 +4,7 @@ import cv2
 import os
 import urllib.request
 import tensorflow as tf
-from .streamlit_preproc import streamlit_processing
+from streamlit_preproc import streamlit_processing
 
 
 MODEL_PATH = "streamlit/ODM.keras"
