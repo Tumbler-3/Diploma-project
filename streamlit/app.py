@@ -4,6 +4,7 @@ import cv2
 import os
 import urllib.request
 import tensorflow as tf
+from .streamlit_preproc import streamlit_processing
 
 
 MODEL_PATH = "streamlit/ODM.keras"
@@ -46,8 +47,8 @@ if uploaded_file is not None:
     if image is None:
         st.error("Error loading the image.")
     else:
-        image_resized = cv2.resize(image, (128, 128))
-        image_normalized = image_resized / 255.0
+        processed_image = streamlit_processing(image, size=128)
+        image_normalized = processed_image / 255.0
         image_input = np.expand_dims(image_normalized, axis=0)
 
         st.image(image, caption="Uploaded Image", use_column_width=True)
